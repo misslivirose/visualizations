@@ -11,45 +11,53 @@
 		<input type="range" id = "numSeg" min="1" max = "2000"/> Number of Segments 
 		<button onclick = "clicked()"> Draw </button>
 		<button onclick = "erase()"> Clear </button>
+		<select> Function 
+			<option value = "archSpiral"> x(t)  = at^(1/n)cos(t), y(t) = at^(1/n)sin(t)</option>
+		</select>
+		<input class ="color" id ="chooser"></input>
 		<script src="three.min.js"></script>
+		<script src="jscolor.js"></script>
 		<script src = "math.min.js" type="text/javascript"></script>
 		<script src ="jquery-2.1.4.min.js" type = "text/javascript"></script>
-		<script src="helper.js"></script>
+		<script src="helper.js"></script>	
+			
 		<script>
 			var scene = new THREE.Scene();
 			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-			var renderer; 
-	
+			var renderer = new THREE.WebGLRenderer(); 
+			renderer.setSize (window.innerWidth, window.innerHeight);
+			document.body.appendChild (renderer.domElement);
+			renderer.domElement.id = "canvas";
+			
+			var geometry;
+			var line;
 			
 			var clicked = function(){
 				
-				erase();
-				
-				renderer = new THREE.WebGLRenderer();
-				renderer.setSize (window.innerWidth, window.innerHeight);
-				document.body.appendChild (renderer.domElement);
-				renderer.domElement.id = "canvas";
-						
-				var material = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 1 } );
+				var _color = document.getElementById("chooser").style.backgroundColor;
+				var material = new THREE.LineBasicMaterial( { color: _color, linewidth: 1 } );
 				var _segLen = document.getElementById("segL").value;
 				var _numSeg = document.getElementById("numSeg").value;
-				var geometry = new spiral(parseFloat(_segLen), parseInt(_numSeg));
-				var line = new THREE.Line(geometry, material);
+				geometry = new spiral(parseFloat(_segLen), parseInt(_numSeg));
+				line = new THREE.Line(geometry, material);
 				scene.add(line);
 				camera.position.z = 50;
 			};		
 			var erase = function(){
 				console.log("Clearing...");
 				$("canvas").remove();
-
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+				renderer.domElement.id = "canvas";
 			};
-			
 			
 			var render = function () {
 				requestAnimationFrame( render );
 				// Do animation changes here
 				try{
-				renderer.render(scene, camera);
+				renderer.render(scene, camera);q
+				
 				}
 				catch(err)
 				{
