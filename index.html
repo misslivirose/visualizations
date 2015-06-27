@@ -11,10 +11,12 @@
 		<input type="range" id = "numSeg" min="1" max = "2000"/> Number of Segments 
 		<button onclick = "clicked()"> Draw </button>
 		<button onclick = "erase()"> Clear </button>
-		<select> Function 
+		<select id = "shapePicker"> Function 
 			<option value = "archSpiral"> x(t)  = at^(1/n)cos(t), y(t) = at^(1/n)sin(t)</option>
+			<option value = "circle"> x^2 + y^2 + z^2 = a^2</option>
 		</select>
 		<input class ="color" id ="chooser"></input>
+		<input class = "slider" type = "range" id = "zoom" min = "1" max = "100"> Zoom </input>
 		<script src="three.min.js"></script>
 		<script src="jscolor.js"></script>
 		<script src = "math.min.js" type="text/javascript"></script>
@@ -32,16 +34,21 @@
 			var geometry;
 			var line;
 			
+			$(".slider").on("input",function()
+			{
+				camera.position.z = this.value;
+				console.log("camera zoom set to: " + this.value);
+			});
+			
 			var clicked = function(){
-				
 				var _color = document.getElementById("chooser").style.backgroundColor;
 				var material = new THREE.LineBasicMaterial( { color: _color, linewidth: 1 } );
 				var _segLen = document.getElementById("segL").value;
 				var _numSeg = document.getElementById("numSeg").value;
-				geometry = new spiral(parseFloat(_segLen), parseInt(_numSeg));
+				var _shape = document.getElementById("shapePicker").value;
+				geometry =  drawShape(_shape, _segLen, _numSeg);
 				line = new THREE.Line(geometry, material);
 				scene.add(line);
-				camera.position.z = 50;
 			};		
 			var erase = function(){
 				console.log("Clearing...");
