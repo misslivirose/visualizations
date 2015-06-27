@@ -2,7 +2,7 @@
 	<head>
 		<title>My first Three.js app</title>
 		<style>
-			body { margin: 0; }
+			body { margin: 0; background-color: #000; color: #fff; }
 			canvas { width: 100%; height: 100% }
 		</style>
 	</head>
@@ -13,18 +13,24 @@
 		<button onclick = "erase()"> Clear </button>
 		<script src="three.min.js"></script>
 		<script src = "math.min.js" type="text/javascript"></script>
+		<script src ="jquery-2.1.4.min.js" type = "text/javascript"></script>
 		<script src="helper.js"></script>
 		<script>
 			var scene = new THREE.Scene();
 			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-
-			var renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
-			renderer.domElement.id = "canvas";
+			var renderer; 
+	
 			
 			var clicked = function(){
-				var material = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 3 } );
+				
+				erase();
+				
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize (window.innerWidth, window.innerHeight);
+				document.body.appendChild (renderer.domElement);
+				renderer.domElement.id = "canvas";
+						
+				var material = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 1 } );
 				var _segLen = document.getElementById("segL").value;
 				var _numSeg = document.getElementById("numSeg").value;
 				var geometry = new spiral(parseFloat(_segLen), parseInt(_numSeg));
@@ -33,14 +39,22 @@
 				camera.position.z = 50;
 			};		
 			var erase = function(){
-				console.log("Attempting to clear...");
-				document.getElementById("canvas").Children.Clear();
+				console.log("Clearing...");
+				$("canvas").remove();
 
 			};
+			
+			
 			var render = function () {
 				requestAnimationFrame( render );
 				// Do animation changes here
+				try{
 				renderer.render(scene, camera);
+				}
+				catch(err)
+				{
+					
+				}
 			};
 
 			render();
